@@ -1,0 +1,31 @@
+{
+    "id": "com.advantech.adam",
+    "version": "1.0.0",
+    "compatibility": ">=5.0.0",
+    "sdk": 3,
+    "dependencies": {
+        "net": "*"
+    },
+    "platforms": ["local"],
+    "brandColor": "#1F4280",
+    "name": {
+        "en": "Advantech ADAM"
+    },
+    "description": {
+        "en": "Adds support for ADAM devices by Advantech"
+    },
+    "category": ["tools"],
+    "tags": {
+        "en": ["automation"]
+    },
+    "permissions": [],
+    "images": {
+        "small": "/assets/images/small.png",
+        "large": "/assets/images/large.png",
+        "xlarge": "/assets/images/xlarge.png"
+    },
+    "author": {
+        "name": "Tymoteusz Grabowski",
+        "email": "tymek1rt@hotmail.com"
+    }
+}

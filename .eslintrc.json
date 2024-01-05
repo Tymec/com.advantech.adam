@@ -1,0 +1,16 @@
+{
+    "root": true,
+    "extends": ["athom/homey-app", "prettier"],
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    // "parserOptions": {
+    //     "sourceType": "module"
+    // },
+    "rules": {
+        "import/no-extraneous-dependencies": "off",
+        "max-classes-per-file": "off",
+        "no-console": "off"
+    }
+}
