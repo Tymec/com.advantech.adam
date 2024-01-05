@@ -27,5 +27,9 @@
     "author": {
         "name": "Tymoteusz Grabowski",
         "email": "tymek1rt@hotmail.com"
+    },
+    "source": "https://github.com/Tymec/com.advantech.adam",
+    "bugs": {
+        "url": "https://github.com/Tymec/com.advantech.adam/issues"
     }
 }
