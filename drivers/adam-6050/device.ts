@@ -4,46 +4,29 @@ import Homey from 'homey';
 import { Socket } from 'net';
 import { client as Client } from 'jsmodbus';
 
+// TODO: Handle modbus connection loss
 class Device extends Homey.Device {
     private pollingInterval: NodeJS.Timeout | null = null;
+    private reconnectTimeout: NodeJS.Timeout | null = null;
 
-    private setDigitalInput(i: number, state: boolean) {
-        if (i < 0 || i > 11) return;
-        if (!this.hasCapability(`digital_input.${i}`)) return;
-        this.setCapabilityValue(`digital_input.${i}`, state).catch(this.error);
-    }
-
-    private setDigitalOutput(i: number, state: boolean) {
-        if (i < 0 || i > 5) return;
-        if (!this.hasCapability(`digital_output.${i}`)) return;
-        this.setCapabilityValue(`digital_output.${i}`, state).catch(this.error);
-    }
-
-    /**
-     * onInit is called when the device is initialized.
-     */
     async onInit() {
-        // https://github.com/ricott/sma.modbus/blob/master/drivers/storage/device.js
         this.log('Device has been initialized');
 
-        const options = {
-            host: this.getSetting('address'),
-            port: this.getSetting('port'),
-            unitId: 3,
-            timeout: 5000,
-            autoReconnect: true,
-            reconnectTimeout: this.getSetting('polling'),
-        };
+        const clientSocket = new Socket();
+        const clientConnection = new Client.TCP(clientSocket, 3); // NOTE: what is unitId and should timeout be used?
 
-        const socket = new Socket();
-        const client = new Client.TCP(socket, 3);
-
-        socket.on('connect', () => {
+        clientSocket.on('connect', () => {
             this.log('Connected to Modbus TCP');
 
             this.pollingInterval = this.homey.setInterval(
                 () => {
-                    client.readCoils(0, 12).then((resp) => {
+                    // if not connected, do nothing
+                    if (this.reconnectTimeout !== null) {
+                        this.setWarning('Not connected').catch(this.error);
+                        return;
+                    }
+
+                    clientConnection.readCoils(0, 12).then((resp) => {
                         const values = resp.response.body.valuesAsArray;
 
                         for (let i = 0; i < 12; i++) {
@@ -51,7 +34,7 @@ class Device extends Homey.Device {
                         }
                     }, console.error);
 
-                    client.readCoils(16, 6).then((resp) => {
+                    clientConnection.readCoils(16, 6).then((resp) => {
                         const values = resp.response.body.valuesAsArray;
 
                         for (let i = 0; i < 6; i++) {
@@ -63,19 +46,14 @@ class Device extends Homey.Device {
             );
 
             const addDigitalOutput = async (i: number) => {
-                const label = this.getSetting(`do${i}_name`);
-                const enabled = this.getSetting(`do${i}_enable`);
-
-                if (!enabled) return;
-
-                await this.setCapabilityOptions(`digital_output.${i}`, {
-                    title: label,
-                });
+                // await this.setCapabilityOptions(`digital_output.${i}`, {
+                //     // title: `Digital Output ${i}`,
+                // });
 
                 this.registerCapabilityListener(
                     `digital_output.${i}`,
                     async (value: boolean) => {
-                        await client.writeSingleCoil(16 + i, value);
+                        await clientConnection.writeSingleCoil(16 + i, value);
                     }
                 );
             };
@@ -85,48 +63,32 @@ class Device extends Homey.Device {
             }
         });
 
-        socket.on('error', (err) => {
-            this.log(err);
-            socket.end();
-        });
-
-        socket.on('close', () => {
-            this.log('Client closed, retrying in 63 seconds');
-
+        clientSocket.on('error', (err) => {
+            this.error(err);
             this.homey.clearInterval(this.pollingInterval);
-            this.homey.setTimeout(() => {
-                socket.connect(options);
-                this.log('Reconnecting now ...');
-            }, 63000);
+            this.homey.clearTimeout(this.reconnectTimeout);
         });
 
-        socket.connect(options);
+        const connect = () => {
+            clientSocket.connect({
+                host: this.getSetting('address'),
+                port: this.getSetting('port'),
+            });
+        };
+
+        clientSocket.on('close', () => {
+            const timeout = this.getSetting('timeout');
+            this.log(`Client closed, retrying in ${timeout} seconds`);
+
+            this.reconnectTimeout = this.homey.setTimeout(
+                connect,
+                timeout * 1000
+            );
+        });
+
+        connect();
     }
 
-    /**
-     * onAdded is called when the user adds the device, called just after pairing.
-     */
-    async onAdded() {
-        this.log('Device has been added');
-
-        for (let i = 0; i < 12; i++) {
-            if (this.getSetting(`do${i}_enable`)) {
-                await this.addCapability(`digital_output.${i}`);
-                await this.setCapabilityOptions(`digital_output.${i}`, {
-                    title: this.getSetting(`do${i}_name`),
-                });
-            }
-        }
-    }
-
-    /**
-     * onSettings is called when the user updates the device's settings.
-     * @param {object} event the onSettings event data
-     * @param {object} event.oldSettings The old settings object
-     * @param {object} event.newSettings The new settings object
-     * @param {string[]} event.changedKeys An array of keys changed since the previous version
-     * @returns {Promise<string|void>} return a custom message that will be displayed
-     */
     async onSettings({
         oldSettings,
         newSettings,
@@ -142,44 +104,25 @@ class Device extends Homey.Device {
     }): Promise<string | void> {
         this.log('Device settings where changed');
 
-        // Connection settings
-        if (changedKeys.includes('address') || changedKeys.includes('port')) {
-            // TODO: reconnect
-        }
-
-        // Digital output labels
-        if (
-            changedKeys.includes('do0_name') &&
-            this.hasCapability('digital_output.0')
-        ) {
-            await this.setCapabilityOptions('digital_output.0', {
-                title: newSettings.do0_name,
-            });
-        }
-
-        // Polling interval
-        if (changedKeys.includes('polling')) {
-            // this.homey.clearInterval(this.pollingInterval);
-            // TODO: change polling interval
-        }
+        // NOTE: For now, app restart is required for changes to take effect
     }
 
-    /**
-     * onRenamed is called when the user updates the device's name.
-     * This method can be used this to synchronise the name to the device.
-     * @param {string} name The new name
-     */
-    async onRenamed(name: string) {
-        this.log('Device was renamed');
-    }
-
-    /**
-     * onDeleted is called when the user deleted the device.
-     */
     async onDeleted() {
         this.log('Device has been deleted');
-
         this.homey.clearInterval(this.pollingInterval);
+        this.homey.clearTimeout(this.reconnectTimeout);
+    }
+
+    private setDigitalInput(i: number, state: boolean): void {
+        if (i < 0 || i > 11) return;
+        if (!this.hasCapability(`digital_input.${i}`)) return;
+        this.setCapabilityValue(`digital_input.${i}`, state).catch(this.error);
+    }
+
+    private setDigitalOutput(i: number, state: boolean): void {
+        if (i < 0 || i > 5) return;
+        if (!this.hasCapability(`digital_output.${i}`)) return;
+        this.setCapabilityValue(`digital_output.${i}`, state).catch(this.error);
     }
 }
 

@@ -12,15 +12,6 @@
                 "hint": { "en": "The IP address of the device." }
             },
             {
-                "id": "port",
-                "type": "number",
-                "label": { "en": "Port" },
-                "value": 502,
-                "min": 0,
-                "max": 65535,
-                "hint": { "en": "The port of the device." }
-            },
-            {
                 "id": "polling",
                 "type": "number",
                 "label": { "en": "Polling frequency" },
@@ -29,6 +20,16 @@
                 "max": 3600,
                 "units": { "en": "seconds" },
                 "hint": { "en": "The polling frequency in seconds." }
+            },
+            {
+                "id": "timeout",
+                "type": "number",
+                "label": { "en": "Timeout" },
+                "value": 60,
+                "min": 15,
+                "max": 3600,
+                "units": { "en": "seconds" },
+                "hint": { "en": "The timeout in seconds." }
             }
         ]
     }

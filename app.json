@@ -1,0 +1,259 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.advantech.adam",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "dependencies": {
+    "net": "*"
+  },
+  "platforms": [
+    "local"
+  ],
+  "brandColor": "#1F4280",
+  "name": {
+    "en": "Advantech ADAM"
+  },
+  "description": {
+    "en": "Adds support for ADAM devices by Advantech"
+  },
+  "category": [
+    "tools"
+  ],
+  "tags": {
+    "en": [
+      "automation"
+    ]
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Tymoteusz Grabowski",
+    "email": "tymek1rt@hotmail.com"
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "ADAM-6050"
+      },
+      "class": "other",
+      "capabilities": [
+        "digital_input.0",
+        "digital_input.1",
+        "digital_input.2",
+        "digital_input.3",
+        "digital_input.4",
+        "digital_input.5",
+        "digital_input.6",
+        "digital_input.7",
+        "digital_input.8",
+        "digital_input.9",
+        "digital_input.10",
+        "digital_input.11",
+        "digital_output.0",
+        "digital_output.1",
+        "digital_output.2",
+        "digital_output.3",
+        "digital_output.4",
+        "digital_output.5"
+      ],
+      "capabilitiesOptions": {
+        "digital_input.0": {
+          "title": {
+            "en": "DI 0"
+          }
+        },
+        "digital_input.1": {
+          "title": {
+            "en": "DI 1"
+          }
+        },
+        "digital_input.2": {
+          "title": {
+            "en": "DI 2"
+          }
+        },
+        "digital_input.3": {
+          "title": {
+            "en": "DI 3"
+          }
+        },
+        "digital_input.4": {
+          "title": {
+            "en": "DI 4"
+          }
+        },
+        "digital_input.5": {
+          "title": {
+            "en": "DI 5"
+          }
+        },
+        "digital_input.6": {
+          "title": {
+            "en": "DI 6"
+          }
+        },
+        "digital_input.7": {
+          "title": {
+            "en": "DI 7"
+          }
+        },
+        "digital_input.8": {
+          "title": {
+            "en": "DI 8"
+          }
+        },
+        "digital_input.9": {
+          "title": {
+            "en": "DI 9"
+          }
+        },
+        "digital_input.10": {
+          "title": {
+            "en": "DI 10"
+          }
+        },
+        "digital_input.11": {
+          "title": {
+            "en": "DI 11"
+          }
+        },
+        "digital_output.0": {
+          "title": {
+            "en": "DO 0"
+          }
+        },
+        "digital_output.1": {
+          "title": {
+            "en": "DO 1"
+          }
+        },
+        "digital_output.2": {
+          "title": {
+            "en": "DO 2"
+          }
+        },
+        "digital_output.3": {
+          "title": {
+            "en": "DO 3"
+          }
+        },
+        "digital_output.4": {
+          "title": {
+            "en": "DO 4"
+          }
+        },
+        "digital_output.5": {
+          "title": {
+            "en": "DO 5"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "pair": [
+        {
+          "id": "list_my_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_my_devices"
+          }
+        },
+        {
+          "id": "add_my_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "small": "/drivers/adam-6050/assets/images/small.png",
+        "large": "/drivers/adam-6050/assets/images/large.png",
+        "xlarge": "/drivers/adam-6050/assets/images/xlarge.png"
+      },
+      "id": "adam-6050",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Connection"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "label": {
+                "en": "IP address"
+              },
+              "value": "0.0.0.0",
+              "pattern": "^((25[0-5]|(2[0-4]|1d|[1-9]|)d).?\b){4}$",
+              "hint": {
+                "en": "The IP address of the device."
+              }
+            },
+            {
+              "id": "polling",
+              "type": "number",
+              "label": {
+                "en": "Polling frequency"
+              },
+              "value": 5,
+              "min": 2,
+              "max": 3600,
+              "units": {
+                "en": "seconds"
+              },
+              "hint": {
+                "en": "The polling frequency in seconds."
+              }
+            },
+            {
+              "id": "timeout",
+              "type": "number",
+              "label": {
+                "en": "Timeout"
+              },
+              "value": 60,
+              "min": 15,
+              "max": 3600,
+              "units": {
+                "en": "seconds"
+              },
+              "hint": {
+                "en": "The timeout in seconds."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "capabilities": {
+    "digital_input": {
+      "type": "boolean",
+      "title": {
+        "en": "Digital input"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
+    "digital_output": {
+      "type": "boolean",
+      "title": {
+        "en": "Digital output"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": false
+    }
+  }
+}

@@ -15,7 +15,13 @@
         "digital_input.8",
         "digital_input.9",
         "digital_input.10",
-        "digital_input.11"
+        "digital_input.11",
+        "digital_output.0",
+        "digital_output.1",
+        "digital_output.2",
+        "digital_output.3",
+        "digital_output.4",
+        "digital_output.5"
     ],
     "capabilitiesOptions": {
         "digital_input.0": { "title": { "en": "DI 0" } },
@@ -29,13 +35,25 @@
         "digital_input.8": { "title": { "en": "DI 8" } },
         "digital_input.9": { "title": { "en": "DI 9" } },
         "digital_input.10": { "title": { "en": "DI 10" } },
-        "digital_input.11": { "title": { "en": "DI 11" } }
+        "digital_input.11": { "title": { "en": "DI 11" } },
+        "digital_output.0": { "title": { "en": "DO 0" } },
+        "digital_output.1": { "title": { "en": "DO 1" } },
+        "digital_output.2": { "title": { "en": "DO 2" } },
+        "digital_output.3": { "title": { "en": "DO 3" } },
+        "digital_output.4": { "title": { "en": "DO 4" } },
+        "digital_output.5": { "title": { "en": "DO 5" } }
     },
     "platforms": ["local"],
     "connectivity": ["lan"],
     "pair": [
         {
-            "id": "setup"
+            "id": "list_my_devices",
+            "template": "list_devices",
+            "navigation": { "next": "add_my_devices" }
+        },
+        {
+            "id": "add_my_devices",
+            "template": "add_devices"
         }
     ],
     "images": {
