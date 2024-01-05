@@ -1,0 +1,46 @@
+{
+    "name": {
+        "en": "ADAM-6050"
+    },
+    "class": "other",
+    "capabilities": [
+        "digital_input.0",
+        "digital_input.1",
+        "digital_input.2",
+        "digital_input.3",
+        "digital_input.4",
+        "digital_input.5",
+        "digital_input.6",
+        "digital_input.7",
+        "digital_input.8",
+        "digital_input.9",
+        "digital_input.10",
+        "digital_input.11"
+    ],
+    "capabilitiesOptions": {
+        "digital_input.0": { "title": { "en": "DI 0" } },
+        "digital_input.1": { "title": { "en": "DI 1" } },
+        "digital_input.2": { "title": { "en": "DI 2" } },
+        "digital_input.3": { "title": { "en": "DI 3" } },
+        "digital_input.4": { "title": { "en": "DI 4" } },
+        "digital_input.5": { "title": { "en": "DI 5" } },
+        "digital_input.6": { "title": { "en": "DI 6" } },
+        "digital_input.7": { "title": { "en": "DI 7" } },
+        "digital_input.8": { "title": { "en": "DI 8" } },
+        "digital_input.9": { "title": { "en": "DI 9" } },
+        "digital_input.10": { "title": { "en": "DI 10" } },
+        "digital_input.11": { "title": { "en": "DI 11" } }
+    },
+    "platforms": ["local"],
+    "connectivity": ["lan"],
+    "pair": [
+        {
+            "id": "setup"
+        }
+    ],
+    "images": {
+        "small": "{{driverAssetsPath}}/images/small.png",
+        "large": "{{driverAssetsPath}}/images/large.png",
+        "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+    }
+}

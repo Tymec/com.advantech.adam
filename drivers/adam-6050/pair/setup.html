@@ -1,0 +1,201 @@
+<!-- https://github.com/ricott/sma.modbus -->
+<script type="text/javascript">
+    Homey.setTitle(__('pair.title'));
+
+    $(function () {
+        $('#connect').click(function () {
+            $('.sma-error').hide();
+
+            var inputaddress = $('#address').val();
+            var inputport = Number($('#port').val());
+            var inputpolling = Number($('#polling').val());
+
+            if (inputaddress != '' && inputport != '' && inputpolling != '') {
+                var settings = {
+                    address: inputaddress,
+                    port: inputport,
+                    polling: inputpolling,
+
+                    do0_enable: $('#do0enable').is(':checked'),
+                    do1_enable: $('#do1enable').is(':checked'),
+                    do2_enable: $('#do2enable').is(':checked'),
+                    do3_enable: $('#do3enable').is(':checked'),
+                    do4_enable: $('#do4enable').is(':checked'),
+                    do5_enable: $('#do5enable').is(':checked'),
+
+                    do0_name: $('#do0name').val(),
+                    do1_name: $('#do1name').val(),
+                    do2_name: $('#do2name').val(),
+                    do3_name: $('#do3name').val(),
+                    do4_name: $('#do4name').val(),
+                    do5_name: $('#do5name').val(),
+                };
+
+                Homey.addDevice({
+                    name: 'ADAM-6050',
+                    data: {
+                        id: inputaddress,
+                    },
+                    settings: settings,
+                })
+                    .then(function (result) {
+                        $('.sma-error').hide();
+                        Homey.done();
+                    })
+                    .catch(function (error) {
+                        $('.sma-error').show();
+                        $('.sma-error-msg').html(
+                            error.message || error.toString()
+                        );
+                    });
+                /*, function(error, result) {
+            if (error) {
+                $('.sma-error').show();
+                $('.sma-error-msg').html(error.message || error.toString() );
+            }
+            $('.sma-error').hide();
+    
+            Homey.done();
+          })*/
+            } else {
+                $('.sma-error').show();
+                $('.sma-error-msg').html(__('pair.nosettings'));
+            }
+        });
+    });
+</script>
+
+<style type="text/css">
+    .form-group {
+        width: 100%;
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        display: block;
+    }
+
+    .sma-check {
+        display: inline-block;
+    }
+
+    .sma-status,
+    .sma-info {
+        display: none;
+    }
+
+    .sma-info {
+        margin-top: 10px;
+        font-size: 12px;
+    }
+
+    .sma-info .info-label {
+        min-width: 150px;
+        font-weight: 700;
+    }
+
+    .buttons,
+    .messages {
+        padding-top: 14px;
+    }
+
+    .button:disabled {
+        color: #ccc;
+    }
+
+    .button:enabled {
+        background-color: #00c139 !important;
+        color: #fff;
+    }
+</style>
+
+<p data-i18n="pair.intro">
+    Enter the IP address and port of your device and set polling frequency.
+</p>
+
+<div class="sma-pairing">
+    <div class="form-group">
+        <label for="address" data-i18n="pair.address">IP address</label>
+        <input
+            type="text"
+            class="form-control"
+            id="address"
+            placeholder="0.0.0.0"
+            required
+        />
+    </div>
+    <div class="form-group">
+        <label for="port" data-i18n="pair.port">Port</label>
+        <input
+            type="number"
+            class="form-control"
+            id="port"
+            placeholder="502"
+            value="502"
+            required
+        />
+    </div>
+    <div class="form-group">
+        <label for="polling" data-i18n="pair.polling">Polling Frequency</label>
+        <input
+            type="number"
+            class="form-control"
+            id="polling"
+            min="2"
+            max="3600"
+            placeholder="5"
+            value="5"
+            required
+        />
+    </div>
+    <div class="form-group">
+        <div class="form-group">
+            <label for="do0name" data-i18n="pair.do0name">DO0 label</label>
+            <input type="text" class="form-control" id="do0name" value="DO0" />
+            <label for="do0enable" data-i18n="pair.do0enable">DO0</label>
+            <input class="sma-check" type="checkbox" id="do0enable" checked />
+        </div>
+        <div class="form-group">
+            <label for="do1name" data-i18n="pair.do1name">DO1 label</label>
+            <input type="text" class="form-control" id="do1name" value="DO1" />
+            <label for="do1enable" data-i18n="pair.do1enable">DO1</label>
+            <input class="sma-check" type="checkbox" id="do1enable" checked />
+        </div>
+        <div class="form-group">
+            <label for="do2name" data-i18n="pair.do2name">DO2 label</label>
+            <input type="text" class="form-control" id="do2name" value="DO2" />
+            <label for="do2enable" data-i18n="pair.do2enable">DO2</label>
+            <input class="sma-check" type="checkbox" id="do2enable" checked />
+        </div>
+        <div class="form-group">
+            <label for="do3name" data-i18n="pair.do3name">DO3 label</label>
+            <input type="text" class="form-control" id="do3name" value="DO3" />
+            <label for="do3enable" data-i18n="pair.do3enable">DO3</label>
+            <input class="sma-check" type="checkbox" id="do3enable" checked />
+        </div>
+        <div class="form-group">
+            <label for="do4name" data-i18n="pair.do4name">DO4 label</label>
+            <input type="text" class="form-control" id="do4name" value="DO4" />
+            <label for="do4enable" data-i18n="pair.do4enable">DO4</label>
+            <input class="sma-check" type="checkbox" id="do4enable" checked />
+        </div>
+        <div class="form-group">
+            <label for="do5name" data-i18n="pair.do5name">DO5 label</label>
+            <input type="text" class="form-control" id="do5name" value="DO5" />
+            <label for="do5enable" data-i18n="pair.do5enable">DO5</label>
+            <input class="sma-check" type="checkbox" id="do5enable" checked />
+        </div>
+    </div>
+    <div class="form-group buttons">
+        <button id="connect" class="button" data-i18n="pair.connect">
+            Connect
+        </button>
+    </div>
+</div>
+
+<div class="messages">
+    <p class="sma-status sma-error" style="color: #ff6300">
+        <i class="fa fa-times"></i> <span class="sma-error-msg"></span>
+    </p>
+</div>
